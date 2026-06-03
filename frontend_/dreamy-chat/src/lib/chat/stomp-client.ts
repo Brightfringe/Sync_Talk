@@ -17,17 +17,16 @@ export async function createChatClient({
   onStatus,
   onMessage,
 }: ChatClientOptions): Promise<ChatClient> {
-  // Lazy-load on the client only — SockJS touches `window` at import time.
-  const [{ Client }, SockJSModule] = await Promise.all([
-    import("@stomp/stompjs"),
-    import("sockjs-client"),
-  ]);
-  const SockJS = SockJSModule.default;
+  const { Client } = await import("@stomp/stompjs");
+
+  const wsUrl = backendUrl
+    .replace(/^http/, "ws")
+    .replace(/\/$/, "") + "/chat/websocket";
 
   let hasConnectedOnce = false;
 
   const client = new Client({
-    webSocketFactory: () => new SockJS(`${backendUrl}/chat`),
+    brokerURL: wsUrl,
     reconnectDelay: 3000,
     heartbeatIncoming: 10000,
     heartbeatOutgoing: 10000,
