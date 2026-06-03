@@ -25,16 +25,16 @@ function Index() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    return onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-        setAuthState("naming");
-      } else {
-        setUser(null);
-        setAuthState("unauthenticated");
-      }
-    });
-  }, []);
+  return onAuthStateChanged(auth, (firebaseUser) => {
+    if (firebaseUser) {
+      setUser(firebaseUser);
+      setAuthState("naming");
+    } else {
+      setUser(null);
+      setAuthState("unauthenticated");  // ← this should show login page
+    }
+  });
+}, []);
 
   if (authState === "loading") {
     return (
@@ -49,7 +49,7 @@ function Index() {
     return <LoginPage />;
   }
 
-  if (authState === "naming") {
+  if (authState === "naming" && user) {
     return (
       <SetNamePage
         onConfirm={(name) => {

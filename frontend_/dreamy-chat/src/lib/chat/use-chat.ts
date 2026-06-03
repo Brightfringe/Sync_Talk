@@ -13,6 +13,7 @@ function makeId() {
 export function useChat(username: string | null) {
   const [status, setStatus] = useState<ConnectionStatus>("idle");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const clientRef = useRef<ChatClient | null>(null);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export function useChat(username: string | null) {
       createChatClient({
         backendUrl: BACKEND_URL,
         onStatus: setStatus,
+        onUsers: setOnlineUsers,
         onMessage: (payload) => {
           setMessages((prev) => [
             ...prev,
@@ -38,7 +40,7 @@ export function useChat(username: string | null) {
           return;
         }
         clientRef.current = client;
-        client.activate();
+        client.activate(username);
       }),
     );
 
@@ -58,5 +60,5 @@ export function useChat(username: string | null) {
     [username],
   );
 
-  return { status, messages, send, backendUrl: BACKEND_URL };
+  return { status, messages, send, onlineUsers, backendUrl: BACKEND_URL };
 }

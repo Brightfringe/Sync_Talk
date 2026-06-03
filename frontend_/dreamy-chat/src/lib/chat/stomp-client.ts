@@ -4,10 +4,11 @@ export interface ChatClientOptions {
   backendUrl: string;
   onStatus: (status: ConnectionStatus) => void;
   onMessage: (payload: WirePayload) => void;
+  onUsers: (users: string[]) => void;
 }
 
 export interface ChatClient {
-  activate: () => void;
+  activate: (name?: string) => void;
   deactivate: () => Promise<void>;
   send: (payload: WirePayload) => boolean;
 }
@@ -16,6 +17,7 @@ export async function createChatClient({
   backendUrl,
   onStatus,
   onMessage,
+  onUsers,
 }: ChatClientOptions): Promise<ChatClient> {
   const { Client } = await import("@stomp/stompjs");
 
@@ -24,6 +26,7 @@ export async function createChatClient({
     .replace(/\/$/, "") + "/chat/websocket";
 
   let hasConnectedOnce = false;
+  let username = "";
 
   const client = new Client({
     brokerURL: wsUrl,
@@ -34,6 +37,8 @@ export async function createChatClient({
     onConnect: () => {
       hasConnectedOnce = true;
       onStatus("connected");
+
+      // Subscribe to messages
       client.subscribe("/topic/message", (frame) => {
         try {
           const parsed = JSON.parse(frame.body) as WirePayload;
@@ -44,6 +49,24 @@ export async function createChatClient({
           // ignore malformed payloads
         }
       });
+
+      // Subscribe to online users
+      client.subscribe("/topic/users", (frame) => {
+        try {
+          const users = JSON.parse(frame.body) as string[];
+          onUsers(users);
+        } catch {
+          // ignore
+        }
+      });
+
+      // Announce join
+      if (username) {
+        client.publish({
+          destination: "/app/join",
+          body: JSON.stringify({ sender: username, content: "", type: "JOIN" }),
+        });
+      }
     },
     onWebSocketClose: () => {
       if (client.active) {
@@ -58,11 +81,19 @@ export async function createChatClient({
   });
 
   return {
-    activate() {
+    activate(name?: string) {
+      if (name) username = name;
       onStatus("connecting");
       client.activate();
     },
     async deactivate() {
+      // Announce leave
+      if (username && client.connected) {
+        client.publish({
+          destination: "/app/leave",
+          body: JSON.stringify({ sender: username, content: "", type: "LEAVE" }),
+        });
+      }
       await client.deactivate();
       onStatus("disconnected");
     },

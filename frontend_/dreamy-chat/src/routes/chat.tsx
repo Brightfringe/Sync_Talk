@@ -46,20 +46,38 @@ function ChatPage() {
     );
   }
 
-  return <ChatRoom username={username} onLeave={() => {
-    clearStoredUsername();
-    void navigate({ to: "/" });
-  }} />;
+  return (
+    <ChatRoom
+      username={username}
+      onLeave={async () => {
+        clearStoredUsername();
+        const { logOut } = await import("@/lib/firebase");
+        await logOut();
+        void navigate({ to: "/" });
+      }}
+    />
+  );
 }
 
-function ChatRoom({ username, onLeave }: { username: string; onLeave: () => void }) {
-  const { status, messages, send } = useChat(username);
+function ChatRoom({
+  username,
+  onLeave,
+}: {
+  username: string;
+  onLeave: () => Promise<void> | void;
+}) {
+  const { status, messages, send, onlineUsers } = useChat(username);
   const canSend = status === "connected";
 
   return (
     <main className="relative flex h-[100dvh] w-full overflow-hidden">
       <HeroBackground />
-      <Sidebar username={username} status={status} onLeave={onLeave} />
+      <Sidebar
+        username={username}
+        status={status}
+        onLeave={onLeave}
+        onlineUsers={onlineUsers}
+      />
       <section className="flex h-full min-w-0 flex-1 flex-col">
         <ChatHeader status={status} onLeave={onLeave} />
         <MessageList messages={messages} currentUser={username} />
