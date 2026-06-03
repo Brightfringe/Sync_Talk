@@ -1,4 +1,5 @@
 import type { ConnectionStatus, WirePayload } from "./types";
+import SockJS from "sockjs-client";
 
 export interface ChatClientOptions {
   backendUrl: string;
@@ -21,19 +22,18 @@ export async function createChatClient({
 }: ChatClientOptions): Promise<ChatClient> {
   const { Client } = await import("@stomp/stompjs");
 
-  const wsUrl = backendUrl
-    .replace(/^http/, "ws")
-    .replace(/\/$/, "") + "/chat/websocket";
+  const socketUrl = backendUrl.replace(/\/$/, "") + "/chat";
 
   let hasConnectedOnce = false;
   let username = "";
 
   const client = new Client({
-    brokerURL: wsUrl,
+    webSocketFactory: () => new SockJS(socketUrl),
     reconnectDelay: 3000,
     heartbeatIncoming: 10000,
     heartbeatOutgoing: 10000,
     debug: () => {},
+
     onConnect: () => {
       hasConnectedOnce = true;
       onStatus("connected");
@@ -42,7 +42,11 @@ export async function createChatClient({
       client.subscribe("/topic/message", (frame) => {
         try {
           const parsed = JSON.parse(frame.body) as WirePayload;
-          if (parsed && typeof parsed.sender === "string" && typeof parsed.content === "string") {
+          if (
+            parsed &&
+            typeof parsed.sender === "string" &&
+            typeof parsed.content === "string"
+          ) {
             onMessage(parsed);
           }
         } catch {
@@ -64,10 +68,15 @@ export async function createChatClient({
       if (username) {
         client.publish({
           destination: "/app/join",
-          body: JSON.stringify({ sender: username, content: "", type: "JOIN" }),
+          body: JSON.stringify({
+            sender: username,
+            content: "",
+            type: "JOIN",
+          }),
         });
       }
     },
+
     onWebSocketClose: () => {
       if (client.active) {
         onStatus(hasConnectedOnce ? "reconnecting" : "connecting");
@@ -75,6 +84,7 @@ export async function createChatClient({
         onStatus("disconnected");
       }
     },
+
     onStompError: () => {
       onStatus("reconnecting");
     },
@@ -86,23 +96,32 @@ export async function createChatClient({
       onStatus("connecting");
       client.activate();
     },
+
     async deactivate() {
       // Announce leave
       if (username && client.connected) {
         client.publish({
           destination: "/app/leave",
-          body: JSON.stringify({ sender: username, content: "", type: "LEAVE" }),
+          body: JSON.stringify({
+            sender: username,
+            content: "",
+            type: "LEAVE",
+          }),
         });
       }
+
       await client.deactivate();
       onStatus("disconnected");
     },
+
     send(payload) {
       if (!client.connected) return false;
+
       client.publish({
         destination: "/app/sendMessage",
         body: JSON.stringify(payload),
       });
+
       return true;
     },
   };
