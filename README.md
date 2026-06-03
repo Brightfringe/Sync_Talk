@@ -1,7 +1,6 @@
 # SyncTalk 💬
 ### Real-time chat application with Google Authentication
 
-![Status](https://img.shields.io/badge/status-live-brightgreen)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green)
 ![React](https://img.shields.io/badge/React-18-blue)
