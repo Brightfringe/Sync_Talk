@@ -1,5 +1,4 @@
 import type { ConnectionStatus, WirePayload } from "./types";
-import SockJS from "sockjs-client";
 
 export interface ChatClientOptions {
   backendUrl: string;
@@ -22,23 +21,36 @@ export async function createChatClient({
 }: ChatClientOptions): Promise<ChatClient> {
   const { Client } = await import("@stomp/stompjs");
 
-  const socketUrl = backendUrl.replace(/\/$/, "") + "/chat";
+  // Convert https:// → wss://, http:// → ws://
+  const wsUrl = backendUrl
+    .replace(/\/$/, "")
+    .replace(/^https:\/\//, "wss://")
+    .replace(/^http:\/\//, "ws://")
+    + "/chat/websocket";
+
+  console.log("BACKEND_URL =", backendUrl);
+  console.log("SOCKET_URL (ws) =", wsUrl);
 
   let hasConnectedOnce = false;
   let username = "";
 
   const client = new Client({
-    webSocketFactory: () => new SockJS(socketUrl),
+    brokerURL: wsUrl,   // ← raw WebSocket, no SockJS
+
     reconnectDelay: 3000,
     heartbeatIncoming: 10000,
     heartbeatOutgoing: 10000,
-    debug: () => {},
+
+    debug: (msg) => {
+      console.log("STOMP:", msg);
+    },
 
     onConnect: () => {
+      console.log("STOMP CONNECTED");
+
       hasConnectedOnce = true;
       onStatus("connected");
 
-      // Subscribe to messages
       client.subscribe("/topic/message", (frame) => {
         try {
           const parsed = JSON.parse(frame.body) as WirePayload;
@@ -49,22 +61,20 @@ export async function createChatClient({
           ) {
             onMessage(parsed);
           }
-        } catch {
-          // ignore malformed payloads
+        } catch (e) {
+          console.error("Message parse error:", e);
         }
       });
 
-      // Subscribe to online users
       client.subscribe("/topic/users", (frame) => {
         try {
           const users = JSON.parse(frame.body) as string[];
           onUsers(users);
-        } catch {
-          // ignore
+        } catch (e) {
+          console.error("Users parse error:", e);
         }
       });
 
-      // Announce join
       if (username) {
         client.publish({
           destination: "/app/join",
@@ -77,7 +87,13 @@ export async function createChatClient({
       }
     },
 
-    onWebSocketClose: () => {
+    onWebSocketError: (e) => {
+      console.error("WS ERROR:", e);
+    },
+
+    onWebSocketClose: (e) => {
+      console.log("WS CLOSED:", e);
+
       if (client.active) {
         onStatus(hasConnectedOnce ? "reconnecting" : "connecting");
       } else {
@@ -85,7 +101,8 @@ export async function createChatClient({
       }
     },
 
-    onStompError: () => {
+    onStompError: (frame) => {
+      console.error("STOMP ERROR:", frame);
       onStatus("reconnecting");
     },
   });
@@ -93,12 +110,12 @@ export async function createChatClient({
   return {
     activate(name?: string) {
       if (name) username = name;
+      console.log("Activating client for:", username);
       onStatus("connecting");
       client.activate();
     },
 
     async deactivate() {
-      // Announce leave
       if (username && client.connected) {
         client.publish({
           destination: "/app/leave",

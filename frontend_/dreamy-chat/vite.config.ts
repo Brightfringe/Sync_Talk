@@ -6,7 +6,10 @@ export default defineConfig({
   },
   vite: {
     define: {
-      global: {},  // ← add it here
+      global: {},
+    },
+    server: {
+      port: 8081,  // ← add this
     },
   },
 });
