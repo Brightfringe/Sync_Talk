@@ -11,15 +11,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-@Override
-public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/chat")          // ← raw WebSocket endpoint
-            .setAllowedOriginPatterns("*");
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/chat")          // ← raw WebSocket endpoint
+                .setAllowedOriginPatterns("*");
 
-    registry.addEndpoint("/chat")          // ← keep SockJS for fallback
-            .setAllowedOriginPatterns("*")
-            .withSockJS();
-}
+        registry.addEndpoint("/chat")          // ← keep SockJS for fallback
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -28,3 +27,4 @@ public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
     }
 }
+
