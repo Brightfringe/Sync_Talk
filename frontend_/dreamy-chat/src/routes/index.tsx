@@ -10,12 +10,6 @@ import { auth } from "@/lib/firebase";
 import { setStoredUsername } from "@/lib/session";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "SyncTalk — Real-time chat, beautifully soft" },
-      { name: "description", content: "Join a real-time chat room in seconds." },
-    ],
-  }),
   component: Index,
 });
 
@@ -25,16 +19,16 @@ function Index() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-  return onAuthStateChanged(auth, (firebaseUser) => {
-    if (firebaseUser) {
-      setUser(firebaseUser);
-      setAuthState("naming");
-    } else {
-      setUser(null);
-      setAuthState("unauthenticated");  // ← this should show login page
-    }
-  });
-}, []);
+    return onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        setAuthState("naming");
+      } else {
+        setUser(null);
+        setAuthState("unauthenticated");
+      }
+    });
+  }, []);
 
   if (authState === "loading") {
     return (
@@ -60,7 +54,6 @@ function Index() {
     );
   }
 
-  // fallback
   return (
     <main className="relative flex min-h-screen items-center justify-center px-4 py-12">
       <HeroBackground />
