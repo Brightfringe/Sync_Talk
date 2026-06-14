@@ -31,7 +31,13 @@ export function useChat(username: string | null) {
         onMessage: (payload) => {
           setMessages((prev) => [
             ...prev,
-            { id: makeId(), sender: payload.sender, content: payload.content, timestamp: Date.now() },
+            {
+              id: makeId(),
+              sender: payload.sender,
+              content: payload.content,
+              timestamp: Date.now(),
+              type: payload.type ?? "CHAT",  // ✅ pass type through
+            },
           ]);
         },
       }).then((client) => {
@@ -39,8 +45,34 @@ export function useChat(username: string | null) {
           void client.deactivate();
           return;
         }
+
         clientRef.current = client;
-        client.activate(username);
+
+        // ✅ fetch history first, then activate WebSocket
+        fetch(`${BACKEND_URL}/api/messages/history`)
+          .then((res) => res.json())
+          .then((history) => {
+            const mapped = history.map((m: {
+              id: number;
+              sender: string;
+              content: string;
+              sentAt: string;
+              type?: "CHAT" | "JOIN" | "LEAVE";
+            }) => ({
+              id: String(m.id),
+              sender: m.sender,
+              content: m.content,
+              timestamp: new Date(m.sentAt).getTime(),
+              type: m.type ?? "CHAT",
+            }));
+            setMessages(mapped);        // set history first
+            client.activate(username);  // then connect
+          })
+          
+          .catch((e) => {
+            console.error("Failed to load history:", e);
+            client.activate(username);  // connect anyway if history fails
+          });
       }),
     );
 
