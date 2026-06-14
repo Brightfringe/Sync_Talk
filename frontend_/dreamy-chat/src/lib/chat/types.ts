@@ -10,9 +10,11 @@ export interface ChatMessage {
   sender: string;
   content: string;
   timestamp: number;
+  type?: "CHAT" | "JOIN" | "LEAVE";
 }
 
 export interface WirePayload {
   sender: string;
   content: string;
+  type?: "CHAT" | "JOIN" | "LEAVE";
 }

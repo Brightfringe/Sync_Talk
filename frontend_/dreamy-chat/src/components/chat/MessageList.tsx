@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { MessageBubble } from "./MessageBubble";
 import { EmptyState } from "./EmptyState";
 import type { ChatMessage } from "@/lib/chat/types";
@@ -7,6 +7,23 @@ import type { ChatMessage } from "@/lib/chat/types";
 interface Props {
   messages: ChatMessage[];
   currentUser: string;
+}
+
+function SystemNotice({ text }: { text: string }) {
+  return (
+    <motion.li
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="flex items-center justify-center gap-3 py-1"
+    >
+      <span className="h-px flex-1 bg-foreground/10" />
+      <span className="text-[11px] font-medium text-foreground/40 select-none">
+        {text}
+      </span>
+      <span className="h-px flex-1 bg-foreground/10" />
+    </motion.li>
+  );
 }
 
 export function MessageList({ messages, currentUser }: Props) {
@@ -40,9 +57,31 @@ export function MessageList({ messages, currentUser }: Props) {
     >
       <ul className="mx-auto flex max-w-3xl flex-col gap-3">
         <AnimatePresence initial={false}>
-          {messages.map((m) => (
-            <MessageBubble key={m.id} message={m} isOwn={m.sender === currentUser} />
-          ))}
+          {messages.map((m) => {
+            if (m.type === "JOIN") {
+              return (
+                <SystemNotice
+                  key={m.id}
+                  text={`${m.sender} joined the chat room`}
+                />
+              );
+            }
+            if (m.type === "LEAVE") {
+              return (
+                <SystemNotice
+                  key={m.id}
+                  text={`${m.sender} left the chat room`}
+                />
+              );
+            }
+            return (
+              <MessageBubble
+                key={m.id}
+                message={m}
+                isOwn={m.sender === currentUser}
+              />
+            );
+          })}
         </AnimatePresence>
       </ul>
       <div ref={bottomRef} />

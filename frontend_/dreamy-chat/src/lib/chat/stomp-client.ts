@@ -54,13 +54,9 @@ export async function createChatClient({
       client.subscribe("/topic/message", (frame) => {
         try {
           const parsed = JSON.parse(frame.body) as WirePayload;
-          if (
-            parsed &&
-            typeof parsed.sender === "string" &&
-            typeof parsed.content === "string"
-          ) {
-            onMessage(parsed);
-          }
+if (parsed && typeof parsed.sender === "string") {
+  onMessage(parsed);  
+}
         } catch (e) {
           console.error("Message parse error:", e);
         }
