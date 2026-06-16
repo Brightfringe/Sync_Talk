@@ -38,8 +38,8 @@ export async function createChatClient({
     brokerURL: wsUrl,   // ← raw WebSocket, no SockJS
 
     reconnectDelay: 3000,
-    heartbeatIncoming: 10000,
-    heartbeatOutgoing: 10000,
+    heartbeatIncoming: 25000,
+    heartbeatOutgoing: 25000,
 
     debug: (msg) => {
       console.log("STOMP:", msg);
