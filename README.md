@@ -1,83 +1,130 @@
-# SyncTalk
+<div align="center">
 
-Live Demo
+# 🔄 SyncTalk
 
+### *Real-time chat. No delays. No refresh. Just talk.*
 
-Java Spring Boot React TypeScript Firebase TailwindCSS PostgreSQL Vercel
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-sync--talk--olive.vercel.app-6C63FF?style=for-the-badge&logoColor=white)](https://sync-talk-olive.vercel.app)
+[![Backend](https://img.shields.io/badge/⚙️_Backend-railway.app-0B0D0E?style=for-the-badge&logoColor=white)](https://synctalk-production-8eba.up.railway.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Brightfringe-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Brightfringe/Sync_Talk)
+
+<br/>
+
+![Java](https://img.shields.io/badge/Java_21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot_4-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![React](https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS_v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
+![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=flat-square&logo=railway&logoColor=white)
+
+<br/>
+
+```
+ ______     __  __     __   __     ______     ______   ______     __         __  __    
+/\  ___\   /\ \_\ \   /\ "-.\ \   /\  ___\   /\__  _\ /\  __ \   /\ \       /\ \/ /   
+\ \___  \  \ \____ \  \ \ \-.  \  \ \ \____  \/_/\ \/ \ \  __ \  \ \ \____  \ \  _"-.  
+ \/\_____\  \/\_____\  \ \_\\"\_\  \ \_____\    \ \_\  \ \_\ \_\  \ \_____\  \ \_\ \_\ 
+  \/_____/   \/_____/   \/_/ \/_/   \/_____/     \/_/   \/_/\/_/   \/_____/   \/_/\/_/ 
+```
+
+> **Sign in. Set your name. Start talking. Everyone's here.**
+
+</div>
+
+---
 
 ## 💡 What is SyncTalk?
-SyncTalk is a full-stack real-time chat application where users sign in with Google, pick a display name, and instantly start chatting with everyone in the room — no refresh needed, no delays.
 
-It's built on a Spring Boot WebSocket backend and a React + TypeScript frontend, communicating over the STOMP protocol for blazing-fast, bidirectional messaging.
+SyncTalk is a **full-stack real-time chat application** where users sign in with Google, pick a display name, and instantly start chatting with everyone in the room — no refresh needed, no delays.
+
+It's built on a **Spring Boot WebSocket backend** and a **React + TypeScript frontend**, communicating over the **STOMP protocol** for blazing-fast, bidirectional messaging. Messages are now **persisted in PostgreSQL** so your chat history is never lost.
 
 Think of it as a lightweight, open chat room — join, say hi, and leave whenever you want.
 
+---
+
 ## ✨ Features
-| Feature | Description |
-|---|---|
-| 🔐 Google Sign-In | Secure OAuth via Firebase — no passwords needed |
-| ⚡ Real-time Messaging | Instant delivery using WebSockets + STOMP |
-| 👥 Live Online Users | See who's in the room, updated in real time |
-| ✏️ Custom Display Name | Set your name after login before entering |
-| 🚪 Clean Logout | Firebase sign-out clears session and redirects |
-| 📱 Responsive UI | Works smoothly on desktop and mobile |
-| 💾 Message Persistence | Chat history saved to PostgreSQL — survives server restarts |
-| 📜 Chat History | Last 50 messages load automatically when you join |
-| 🔔 Join/Leave Notifications | See when someone joins or leaves the chat room |
+
+| | Feature | Description |
+|---|---|---|
+| 🔐 | **Google Sign-In** | Secure OAuth via Firebase — no passwords needed |
+| ⚡ | **Real-time Messaging** | Instant delivery using WebSockets + STOMP |
+| 💾 | **Message Persistence** | All messages saved to PostgreSQL — survive server restarts |
+| 📜 | **Chat History** | Last 50 messages load automatically when you join |
+| 🔔 | **Join/Leave Notifications** | See when someone joins or leaves the chat room |
+| 👥 | **Live Online Users** | See who's in the room, updated in real time |
+| ✏️ | **Custom Display Name** | Set your name after login before entering |
+| 🚪 | **Clean Logout** | Firebase sign-out clears session and redirects |
+| 📱 | **Responsive UI** | Works smoothly on desktop and mobile |
+
+---
 
 ## 🏗️ How It Works
+
 ```
-┌─────────────────────┐         ┌──────────────────────────┐
-│                     │  HTTPS  │                          │
-│   React Frontend    │ ──────► │   Spring Boot Backend    │
-│   (Vercel)          │   WSS   │   (Railway)              │
-│                     │ ◄─────► │                          │
-└─────────────────────┘         └──────────────────────────┘
-          │                                  │
-          ▼                                  ▼
-┌─────────────────────┐         ┌──────────────────────────┐
-│   Firebase Auth     │         │   PostgreSQL Database    │
-│   (Google OAuth)    │         │   (Railway)              │
-└─────────────────────┘         └──────────────────────────┘
+┌─────────────────────────┐         ┌──────────────────────────────┐
+│                         │  HTTPS  │                              │
+│    React Frontend       │ ──────► │    Spring Boot Backend       │
+│    (Vercel)             │   WSS   │    (Railway)                 │
+│                         │ ◄─────► │                              │
+└─────────────────────────┘         └──────────────────────────────┘
+           │                                       │
+           ▼                                       ▼
+┌─────────────────────────┐         ┌──────────────────────────────┐
+│    Firebase Auth        │         │    PostgreSQL Database       │
+│    (Google OAuth)       │         │    (Railway)                 │
+└─────────────────────────┘         └──────────────────────────────┘
 ```
 
-### Flow
-1. User visits the app → signs in with Google via Firebase
-2. After login → sets a custom display name
-3. Frontend fetches last 50 messages from `/api/messages/history`
-4. Frontend connects to Spring Boot via WebSocket (STOMP)
-5. On join → backend saves JOIN event to DB, broadcasts "X joined the chat room" to all clients
-6. Messages go to `/app/sendMessage` → saved to PostgreSQL → broadcast to all via `/topic/message`
-7. On logout → backend saves LEAVE event, broadcasts "X left the chat room" and updates the online list for everyone
+### 🔄 Request Flow
+
+```
+1. User visits app  ──►  Signs in with Google via Firebase
+2. After login      ──►  Sets a custom display name
+3. On page load     ──►  Frontend fetches last 50 messages from /api/messages/history
+4. Connection       ──►  Frontend connects to Spring Boot via WebSocket (STOMP)
+5. On join          ──►  Backend saves JOIN event → broadcasts "X joined the chat room"
+6. On message       ──►  Saved to PostgreSQL → broadcast to all via /topic/message
+7. On logout        ──►  Backend saves LEAVE event → broadcasts "X left the chat room"
+```
+
+---
 
 ## 🛠️ Tech Stack
 
 ### Backend
-| Technology | Purpose |
-|---|---|
-| Java 21 | Core language |
-| Spring Boot 4 | Application framework |
-| Spring WebSocket | WebSocket server |
-| Spring Data JPA | Database ORM |
-| STOMP Protocol | Messaging protocol over WebSocket |
-| SockJS | WebSocket fallback support |
-| PostgreSQL | Persistent message storage |
-| Hibernate | ORM / schema auto-generation |
-| Lombok | Boilerplate reduction |
-| Maven | Build tool |
+| Technology | Version | Purpose |
+|---|---|---|
+| ![Java](https://img.shields.io/badge/-Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white) | 21 | Core language |
+| ![Spring Boot](https://img.shields.io/badge/-Spring_Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white) | 4.0 | Application framework |
+| ![Spring WebSocket](https://img.shields.io/badge/-Spring_WebSocket-6DB33F?style=flat-square&logo=spring&logoColor=white) | - | WebSocket server |
+| ![Spring Data JPA](https://img.shields.io/badge/-Spring_Data_JPA-6DB33F?style=flat-square&logo=spring&logoColor=white) | - | Database ORM |
+| ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white) | 17 | Persistent message storage |
+| ![Hibernate](https://img.shields.io/badge/-Hibernate-59666C?style=flat-square&logo=hibernate&logoColor=white) | 7.2 | ORM / schema auto-generation |
+| STOMP Protocol | - | Messaging protocol over WebSocket |
+| SockJS | - | WebSocket fallback support |
+| Lombok | - | Boilerplate reduction |
+| Maven | - | Build tool |
 
 ### Frontend
-| Technology | Purpose |
-|---|---|
-| React 19 | UI framework |
-| TypeScript | Type safety |
-| Vite 7 | Build tool |
-| TanStack Router | Client-side routing |
-| @stomp/stompjs | STOMP WebSocket client |
-| Firebase Auth | Google OAuth |
-| Tailwind CSS v4 | Styling |
+| Technology | Version | Purpose |
+|---|---|---|
+| ![React](https://img.shields.io/badge/-React-20232A?style=flat-square&logo=react&logoColor=61DAFB) | 19 | UI framework |
+| ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) | - | Type safety |
+| ![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat-square&logo=vite&logoColor=white) | 7 | Build tool |
+| ![TailwindCSS](https://img.shields.io/badge/-Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white) | v4 | Styling |
+| ![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black) | - | Google OAuth |
+| TanStack Router | - | Client-side routing |
+| @stomp/stompjs | - | STOMP WebSocket client |
 
-## 📡 WebSocket API Reference
+---
+
+## 📡 API Reference
+
+### WebSocket Endpoints (STOMP)
 | Destination | Direction | Description |
 |---|---|---|
 | `/app/sendMessage` | Client → Server | Send a chat message (saved to DB) |
@@ -86,60 +133,69 @@ Think of it as a lightweight, open chat room — join, say hi, and leave wheneve
 | `/topic/message` | Server → Client | Receive chat messages + join/leave events |
 | `/topic/users` | Server → Client | Receive online users list |
 
-## 🗄️ REST API Reference
+### REST Endpoints
 | Endpoint | Method | Description |
 |---|---|---|
-| `/api/messages/history` | GET | Returns last 50 messages from PostgreSQL |
+| `/api/messages/history` | `GET` | Returns last 50 messages from PostgreSQL |
+
+---
 
 ## 🗃️ Database Schema
-```
-messages
-├── id         BIGSERIAL PRIMARY KEY
-├── sender     VARCHAR(255)
-├── content    TEXT
-├── type       VARCHAR(10)  -- 'CHAT', 'JOIN', 'LEAVE'
-└── sent_at    TIMESTAMP
+
+```sql
+CREATE TABLE messages (
+    id       BIGSERIAL PRIMARY KEY,
+    sender   VARCHAR(255),
+    content  TEXT,
+    type     VARCHAR(10),   -- 'CHAT', 'JOIN', 'LEAVE'
+    sent_at  TIMESTAMP
+);
 ```
 
+---
+
 ## 📂 Project Structure
+
 ```
 Sync_Talk/
 ├── backend/
 │   └── chatApp/
 │       ├── src/main/java/com/example/chatApp/
 │       │   ├── config/
-│       │   │   └── WebSocketConfig.java      # STOMP + WebSocket config
+│       │   │   └── WebSocketConfig.java       # STOMP + WebSocket config
 │       │   ├── controller/
-│       │   │   └── ChatController.java       # Message handlers + history endpoint
+│       │   │   └── ChatController.java        # Message handlers + /api/messages/history
 │       │   ├── model/
-│       │   │   ├── ChatMessage.java          # Message entity (JPA)
-│       │   │   └── UserTracker.java          # Online users tracker
+│       │   │   ├── ChatMessage.java           # JPA Entity — maps to messages table
+│       │   │   └── UserTracker.java           # In-memory online users tracker
 │       │   ├── repository/
-│       │   │   └── MessageRepository.java    # JPA repository for messages
+│       │   │   └── MessageRepository.java     # JPA repository (findTop50ByOrderBySentAtAsc)
 │       │   └── service/
-│       │       └── MessageService.java       # Business logic for saving/fetching messages
+│       │       └── MessageService.java        # Save messages + fetch history
 │       └── Dockerfile
 └── frontend_/
     └── dreamy-chat/
         └── src/
             ├── components/
             │   ├── auth/
-            │   │   ├── LoginPage.tsx          # Google sign-in UI
-            │   │   └── SetNamePage.tsx        # Name setup UI
+            │   │   ├── LoginPage.tsx           # Google sign-in UI
+            │   │   └── SetNamePage.tsx         # Name setup UI
             │   └── chat/
-            │       ├── Sidebar.tsx            # Online users + nav
-            │       ├── MessageList.tsx        # Chat messages + join/leave notifications
-            │       └── MessageInput.tsx       # Message composer
+            │       ├── Sidebar.tsx             # Online users + nav
+            │       ├── MessageList.tsx         # Chat bubbles + join/leave notices
+            │       └── MessageInput.tsx        # Message composer
             ├── lib/
             │   ├── chat/
-            │   │   ├── stomp-client.ts        # WebSocket/STOMP client
-            │   │   └── use-chat.ts            # React hook for chat state + history loading
-            │   └── firebase.ts               # Firebase setup + auth
+            │   │   ├── stomp-client.ts         # WebSocket/STOMP client
+            │   │   └── use-chat.ts             # Chat state hook + history fetching
+            │   └── firebase.ts                # Firebase setup + auth
             └── routes/
-                ├── __root.tsx                 # App root + providers
-                ├── index.tsx                  # Auth flow + routing
-                └── chat.tsx                   # Chat room page
+                ├── __root.tsx                  # App root + providers
+                ├── index.tsx                   # Auth flow + routing
+                └── chat.tsx                    # Chat room page
 ```
+
+---
 
 ## 🔧 Running Locally
 
@@ -166,7 +222,7 @@ CREATE DATABASE synctalk_db;
 cd backend/chatApp
 ./mvnw spring-boot:run
 # Runs on http://localhost:8080
-# Tables are auto-created by Hibernate on first run
+# Hibernate auto-creates the messages table on first run
 ```
 
 ### 4. Start the Frontend
@@ -181,16 +237,17 @@ npm run dev
 
 ### 5. Environment Variables
 
-**Backend** (`application.properties`):
+**Backend** — `src/main/resources/application.properties`:
 ```properties
 spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/synctalk_db}
 spring.datasource.username=${SPRING_DATASOURCE_USERNAME:postgres}
 spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:yourpassword}
 spring.jpa.hibernate.ddl-auto=update
+spring.jpa.open-in-view=false
 ```
 
-**Frontend** (`.env`):
-```
+**Frontend** — `.env`:
+```env
 VITE_BACKEND_URL=http://localhost:8080
 VITE_SOCKET_URL=http://localhost:8080/chat
 
@@ -202,29 +259,37 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 ```
 
+---
+
 ## 🔑 Key Technical Decisions
 
-### PostgreSQL for Message Persistence
-Messages are now saved to a PostgreSQL database on every send. When a user joins, the frontend fetches the last 50 messages via a REST endpoint (`/api/messages/history`) before connecting to the WebSocket — so chat history loads instantly without waiting for new messages.
+### 💾 PostgreSQL for Message Persistence
+Messages are saved to PostgreSQL on every send using Spring Data JPA. When a user joins, the frontend fetches the last 50 messages via `/api/messages/history` before connecting to the WebSocket — so chat history loads instantly. JOIN and LEAVE events are also persisted with their message type.
 
-### Native WebSocket over SockJS
+### 🔌 Native WebSocket over SockJS
 SockJS depends on a Node.js global object that doesn't exist in modern Vite/browser environments, causing a `ReferenceError` at runtime. Switching to native WebSocket via `@stomp/stompjs` with `brokerURL` solved this cleanly — no polyfills needed.
 
-### Firebase for Authentication
-Firebase provides a simple, secure Google OAuth flow entirely on the frontend. This keeps the Spring Boot backend completely stateless — it never needs to manage users or sessions. User identity (display name) is passed with each message.
+### 🔐 Firebase for Authentication
+Firebase provides a simple, secure Google OAuth flow entirely on the frontend. This keeps the Spring Boot backend completely stateless — it never needs to manage users or sessions. User identity (display name) is passed with each message payload.
 
-### TanStack Router over React Router
+### 🗺️ TanStack Router over React Router
 TanStack Router offers full TypeScript support with type-safe routes, which pairs well with the rest of the TypeScript-first stack.
 
-### JOIN/LEAVE as System Notifications
-Join and leave events are saved to the database with `type: JOIN/LEAVE` and displayed as centered system notices (e.g. "Shubhangi joined the chat room") rather than as chat bubbles — keeping the UI clean and distinct from real messages.
+### 🔔 JOIN/LEAVE as System Notifications
+Join and leave events are persisted to the database with `type: JOIN` or `type: LEAVE` and rendered as centered system notices in the UI (e.g. *"Shubhangi joined the chat room"*) — keeping them visually distinct from regular chat messages.
+
+---
 
 ## 🚧 Known Limitations
+
 - Single chat room — no private messaging or multiple rooms yet
 - In-memory user tracking — online user list resets on server restart
-- Last 50 messages loaded on join — older history not paginated yet
+- Last 50 messages only — older history not paginated yet
+
+---
 
 ## 🔮 Roadmap
+
 - [x] PostgreSQL for message persistence
 - [x] Chat history loading on join
 - [x] Join/Leave notifications
@@ -235,7 +300,15 @@ Join and leave events are saved to the database with `type: JOIN/LEAVE` and disp
 - [ ] Typing indicators
 - [ ] Pagination for older messages
 
+---
+
 ## 👩‍💻 Author
+
+<div align="center">
+
 **Shubhangi Sharma**
 
-GitHub
+[![GitHub](https://img.shields.io/badge/GitHub-Brightfringe-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Brightfringe)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-SyncTalk-6C63FF?style=for-the-badge)](https://sync-talk-olive.vercel.app)
+
+</div>
